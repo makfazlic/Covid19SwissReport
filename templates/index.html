@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COVID-19 Report - Main</title>
+    <link href="https://fonts.googleapis.com/css?family=Varela&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+<body style="font-family: 'Varela', sans-serif; text-align: center;">
+    <!--
+    <header style="height: 100px; top: 0; right: 0; left: 0; width: 100%; background-color:rgb(240, 0, 0); position: fixed; text-align: center;">
+        <a style="position: absolute; left: 10px; text-decoration: none; color: white; max-width: 20%;" href="https://www.bag.admin.ch/bag/en/home/krankheiten/ausbrueche-epidemien-pandemien/aktuelle-ausbrueche-epidemien/novel-cov/situation-schweiz-und-international.html"><h6 style="font-size: 1.1em;">Official Swiss Gouvernment Data</h6></a>
+        <div style="display: flex; text-align: center; "><h2 style="margin: 33px 15px 20px auto; color: white;">Unofficial Swiss COVID-19 Report</h2><img style="height: 50px; width: 50px; margin-top: 25px; margin-right: auto;" src="https://www.nicepng.com/png/full/329-3296455_switzerland-flag-clipart-cross-transparent-white-cross-swiss.png" alt=""></div>
+        
+        <a style="position: absolute; top: 4px; right: 15px; text-decoration: none; color: white; max-width: 20%;" href="/"><h6 style="font-size: 1.1em;">Click here for More Data</h6></a>
+    </header>
+    -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: red !important; padding: 20px 0px;">
+        <a class="navbar-brand" href="/" style="display: flex;"><img style="height: 50px; width: 50px; margin-left: 10px;" src="https://www.nicepng.com/png/full/329-3296455_switzerland-flag-clipart-cross-transparent-white-cross-swiss.png" alt=""><h6 style="margin: 12px 0 12px 12px; color: white; font-size: 1.1em;" class="name">Unofficial Swiss COVID-19 Report</h6></a>
+        <button class="navbar-toggler" style="margin-right: 20px; background-color: white !important;" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav" style="margin-left: 40px !important;">
+          <ul class="navbar-nav" style="margin-left: auto !important; margin-right: 20px !important;">
+            <li class="nav-item">
+              <a style=" color: white !important; font-size: 1.1em;" class="nav-link" href="https://www.bag.admin.ch/bag/en/home/krankheiten/ausbrueche-epidemien-pandemien/aktuelle-ausbrueche-epidemien/novel-cov/situation-schweiz-und-international.html">Official Swiss Government Data</a>
+            </li>
+            <li class="nav-item">
+              <a style=" color: white !important; font-size: 1.1em;" class="nav-link" href="/more_data">More Processed Data</a>
+            </li>
+            <li class="nav-item">
+              <a style=" color: white !important; font-size: 1.1em;" class="nav-link" href="/facts_sources">Facts and Sources</a>
+            </li>
+
+          </ul>
+        </div>
+      </nav>
+
+    <h3 id="p" style="padding-top: 100px;">Graphs of current Swiss COVID-19 data, last updated and processed on: </h3>
+    <div class="graph" id="fgraph" style="width: 70%; margin: 0 auto;padding-top: 60px; padding-bottom: 50px;">
+        <canvas id="myChart1"></canvas>
+    </div>
+    
+    <div class="graph" style="width: 70%; margin: 0 auto; padding-bottom: 50px;">
+    <canvas id="myChart2"></canvas>
+    </div>
+
+    <div class="graph" style="width: 70%; margin: 0 auto; padding-bottom: 50px;">
+        <canvas id="myChart3"></canvas>
+    </div>
+
+    <div class="graph" style="width: 70%; margin: 0 auto; padding-bottom: 50px;">
+        <canvas id="myChart4"></canvas>
+    </div>
+
+    <div class="graph" style="width: 70%; margin: 0 auto; padding-bottom: 50px;">
+        <canvas id="myChart5"></canvas>
+    </div>
+
+    <div class="graph" style="width: 70%; margin: 0 auto; padding-bottom: 300px;">
+        <canvas id="myChart6"></canvas>
+    </div>
+
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>swal("Landscape mode!", "If looking at the graphs on your mobile device, make sure to turn your device into landscape mode for better visibility and rendering!");</script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script>
+        dates = {{ dates }}
+        for (index = 0; index < dates.length; index++) { 
+            dates[index] = dates[index].join("/")
+        } 
+        dates1 = dates.splice(24)
+        values = {{ values }}
+        values1 = values.splice(24)
+        marginal = {{marginal}}
+        marginal1 = marginal.splice(24)
+        death = {{death}}
+        marginal_d = {{marginal_death}}
+        recov = {{recovered}}
+        recov1 = recov.splice(24)
+        marg_rec = {{marginal_rec}}
+        marg_rec1 = marg_rec.splice(24)
+
+        var ctx1 = document.getElementById('myChart1').getContext('2d');
+        var ctx2 = document.getElementById('myChart2').getContext('2d');
+        var ctx3 = document.getElementById('myChart3').getContext('2d');
+        var ctx4 = document.getElementById('myChart4').getContext('2d');
+        var ctx5 = document.getElementById('myChart5').getContext('2d');
+        var ctx6 = document.getElementById('myChart6').getContext('2d');
+    var chart1 = new Chart(ctx1, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        labels: dates1,
+        datasets: [{
+            label: 'Cumulative confirmed cases in Switzerland by day.',
+            fill: false,
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: values1
+            }]
+    },
+    // Configuration options go here
+    options: {
+        scales: {
+    yAxes: [{
+      scaleLabel: {
+        display: true,
+        labelString: 'Number of Swiss residents affected'
+      }
+    }]
+  } 
+    }
+    });
+
+    var chart2 = new Chart(ctx2, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        labels: dates1,
+        datasets: [{
+            label: 'Daily confirmed cases in Switzerland',
+            fill: false,
+            backgroundColor: 'rgb(0, 153, 255)',
+            borderColor: 'rgb(0, 153, 255)',
+            data: marginal1
+            }]
+    },
+    // Configuration options go here
+    options: {
+        scales: {
+    yAxes: [{
+      scaleLabel: {
+        display: true,
+        labelString: 'Number of Swiss residents affected'
+      }
+    }]
+    } 
+    }
+    });
+
+    var chart3 = new Chart(ctx3, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        labels: dates1,
+        datasets: [{
+            label: 'Cumulative confirmed death cases in Switzerland by day',
+            fill: false,
+            backgroundColor: 'rgb(204, 102, 153)',
+            borderColor: 'rgb(204, 102, 153)',
+            data: death.splice(24)
+            }]
+    },
+    // Configuration options go here
+    options: {
+        scales: {
+    yAxes: [{
+      scaleLabel: {
+        display: true,
+        labelString: 'Number of Swiss residents affected'
+      }
+    }]
+    } 
+    }
+    });
+
+    var chart4 = new Chart(ctx4, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        labels: dates1,
+        datasets: [{
+            label: 'Daily confirmed death cases in Switzerland',
+            fill: false,
+            backgroundColor: 'rgb(0, 204, 153)',
+            borderColor: 'rgb(0, 204, 153)',
+            data: marginal_d.splice(24)
+            }]
+    },
+    // Configuration options go here
+    options: {
+        scales: {
+            yAxes: [{
+                scaleLabel: {
+                display: true,
+                labelString: 'Number of Swiss residents affected'
+                }
+                }]
+            } 
+        }
+    });
+
+    var chart5 = new Chart(ctx5, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        labels: dates1,
+        datasets: [{
+            label: 'Cumulative confirmed recovered cases in Switzerland by day',
+            fill: false,
+            backgroundColor: 'rgb(153, 102, 255)',
+            borderColor: 'rgb(153, 102, 255)',
+            data: recov1
+            }]
+    },
+    // Configuration options go here
+    options: {
+        scales: {
+            yAxes: [{
+                scaleLabel: {
+                display: true,
+                labelString: 'Number of Swiss residents affected'
+                }
+                }]
+            } 
+        }
+    });
+
+    var chart6 = new Chart(ctx6, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        labels: dates1,
+        datasets: [{
+            label: 'Daily confirmed recovered cases in Switzerland',
+            fill: false,
+            backgroundColor: 'rgb(255, 153, 102)',
+            borderColor: 'rgb(255, 153, 102)',
+            data: marg_rec1
+            }]
+    },
+    // Configuration options go here
+    options: {
+        scales: {
+            yAxes: [{
+                scaleLabel: {
+                display: true,
+                labelString: 'Number of Swiss residents affected'
+                }
+                }]
+            } 
+        }
+    });
+
+    
+</script>
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script>
+var t = document.getElementById("p");
+var y = {{date}}
+t.textContent += y.join("/");
+</script>
+<style>
+    @media (max-width: 550px) {
+    .name{
+    display: none;
+
+  }
+  }
+  @media (max-width: 750px) {
+    .graph{
+    width: 95% !important;
+    }
+    #fgraph{
+      padding-top: 50px !important;
+  
+  }
+  }
+</style>
+</body>
+</html>

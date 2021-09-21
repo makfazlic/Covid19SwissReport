@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COVID-19 Report - More Processed Data</title>
+    <link href="https://fonts.googleapis.com/css?family=Varela&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+
+    <body style="font-family: 'Varela', sans-serif; text-align: center;">
+    <!--
+    <header style="height: 100px; top: 0; rig    <title>Document</title>10px; text-decoration: none; color: white; max-width: 20%;" href="https://www.bag.admin.ch/bag/en/home/krankheiten/ausbrueche-epidemien-pandemien/aktuelle-ausbrueche-epidemien/novel-cov/situation-schweiz-und-international.html"><h6 style="font-size: 1.1em;">Official Swiss Gouvernment Data</h6></a>
+        <div style="display: flex; text-align: center; "><h2 style="margin: 33px 15px 20px auto; color: white;">Unofficial Swiss COVID-19 Report</h2><img style="height: 50px; width: 50px; margin-top: 25px; margin-right: auto;" src="https://www.nicepng.com/png/full/329-3296455_switzerland-flag-clipart-cross-transparent-white-cross-swiss.png" alt=""></div>
+        
+        <a style="position: absolute; top: 4px; right: 15px; text-decoration: none; color: white; max-width: 20%;" href="/"><h6 style="font-size: 1.1em;">Click here for More Data</h6></a>
+    </header>
+    -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: red !important; padding: 20px 0px;">
+        <a class="navbar-brand" href="/" style="display: flex;"><img style="height: 50px; width: 50px; margin-left: 10px;" src="https://www.nicepng.com/png/full/329-3296455_switzerland-flag-clipart-cross-transparent-white-cross-swiss.png" alt=""><h6 style="margin: 12px 0 12px 12px; color: white; font-size: 1.1em;" class="name">Unofficial Swiss COVID-19 Report</h6></a>
+        <button class="navbar-toggler" style="margin-right: 20px; background-color: white !important;" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav" style="margin-left: 40px !important;">
+          <ul class="navbar-nav" style="margin-left: auto !important; margin-right: 20px !important;">
+            <li class="nav-item">
+              <a style=" color: white !important; font-size: 1.1em;" class="nav-link" href="https://www.bag.admin.ch/bag/en/home/krankheiten/ausbrueche-epidemien-pandemien/aktuelle-ausbrueche-epidemien/novel-cov/situation-schweiz-und-international.html">Official Swiss Government Data</a>
+            </li>
+            <li class="nav-item">
+              <a style=" color: white !important; font-size: 1.1em;" class="nav-link" href="/more_data">More Processed Data</a>
+            </li>
+            <li class="nav-item">
+              <a style=" color: white !important; font-size: 1.1em;" class="nav-link" href="/facts_sources">Facts and Sources</a>
+            </li>
+
+          </ul>
+        </div>
+      </nav>
+
+
+      <h3 id="p" style="padding-top: 100px;">Pie Chart of current Swiss COVID-19 cases, last updated and processed on: </h3>
+
+      <h3 id="p" style="padding-top: 20px;">Death ratio in Switzerland: {{percentage}}%</h3>
+      <h3 id="p" style="padding-top: 5px;">Recovery ratio in Switzerland: {{percentage_rec}}%</h3>
+      <div style="width: 60%; margin: auto; padding-top: 50px; padding-bottom: 120px;" class="graph">
+        <canvas id="myChart1"></canvas>
+      </div>
+
+      <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+      <script>swal("Landscape mode!", "If looking at the graphs on your mobile device, make sure to turn your device into landscape mode for better visibility and rendering!");</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script>
+var ctx1 = document.getElementById('myChart1').getContext('2d');
+data1={{data}}
+var myPieChart = new Chart(ctx1, {
+    type: 'pie',
+    data: {
+        labels: ["People infected by COVID-19","Deaths caused by COVID-19", "People recovered from COVID-19"],
+        datasets: [{
+            data: data1,
+            backgroundColor: ["rgb(51, 204, 255)","rgb(255, 99, 132)","rgb(255, 153, 102)"],
+            borderColor: [],
+            borderWidth: [3,1,1],
+
+            }]
+    },
+});
+var t = document.getElementById("p");
+var y = {{date}}
+t.textContent += y.join("/");
+</script>
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<style>
+  @media (max-width: 550px) {
+  .name{
+  display: none;
+}
+}
+@media (max-width: 750px) {
+    .graph{
+    width: 100% !important;
+    }
+  }
+</style>
+</body>
+</html>
